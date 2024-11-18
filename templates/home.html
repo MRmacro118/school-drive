@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function confirmDelete(filename) {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('file-to-delete').value = filename;
+            document.getElementById('file-name-display').textContent = filename;
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Uploaded Files</h2>
+        <a href="{{ url_for('upload') }}">
+            <button>Upload New File</button>
+        </a>
+        <a href="{{ url_for('logout') }}" style="float: right;">Logout</a>
+        
+        <ul>
+            {% for file in files %}
+                <li>
+                    <a href="{{ url_for('uploaded_file', filename=file) }}">{{ file }}</a>
+                    <button class="delete-btn" onclick="confirmDelete('{{ file }}')">Delete</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Delete Confirmation Popup -->
+    <div id="popup">
+        <div class="popup-content">
+            <p>Are you sure you want to delete "<span id="file-name-display"></span>"?</p>
+            <form method="post" action="{{ url_for('delete_file') }}">
+                <input type="hidden" id="file-to-delete" name="filename">
+                <button type="submit">Yes, Delete</button>
+                <button type="button" onclick="closePopup()">Cancel</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
